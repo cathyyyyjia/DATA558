@@ -1,0 +1,184 @@
+
+Nearest Neighbors in Astronomy
+==============================
+This example demonstrates the use of both k-d tree-based
+implementations on a large-scale astronomical data set that is 
+based on the Sloan Digitial Sky Survey (http://www.sdss.org). 
+The data set contains 2,000,000 training points and 10,000,000
+test points in a 10-dimensional feature space.
+Note: The platform and the device needs to be specified below 
+(via the parameter 'plat_dev_ids').
+
+Parsing data ...
+
+Additional data need to be downloaded from:
+http://www.cs.ru.nl/~fgieseke/data/sdss/photometric_spec_confirmed.npy
+(to the current directory, about 400MB).
+
+Do you wish to continue? [y/n]  y
+
+
+    Funding for the SDSS and SDSS-II has been provided by the Alfred 
+    P. Sloan Foundation, the Participating Institutions, the National 
+    Science Foundation, the U.S. Department of Energy, the National 
+    Aeronautics and Space Administration, the Japanese Monbukagakusho, 
+    the Max Planck Society, and the Higher Education Funding Council 
+    for England. The SDSS Web Site is http://www.sdss.org/.
+    The SDSS is managed by the Astrophysical Research Consortium for the 
+    Participating Institutions. The Participating Institutions are 
+    the American Museum of Natural History, Astrophysical Institute 
+    Potsdam, University of Basel, University of Cambridge, Case 
+    Western Reserve University, University of Chicago, Drexel 
+    University, Fermilab, the Institute for Advanced Study, the Japan 
+    Participation Group, Johns Hopkins University, the Joint Institute 
+    for Nuclear Astrophysics, the Kavli Institute for Particle 
+    Astrophysics and Cosmology, the Korean Scientist Group, the 
+    Chinese Academy of Sciences (LAMOST), Los Alamos National 
+    Laboratory, the Max-Planck-Institute for Astronomy (MPIA), the 
+    Max-Planck-Institute for Astrophysics (MPA), New Mexico State 
+    University, Ohio State University, University of Pittsburgh, 
+    University of Portsmouth, Princeton University, the United States 
+    Naval Observatory, and the University of Washington.
+
+
+    
+Downloading from http://www.cs.ru.nl/~fgieseke/data/sdss/photometric_spec_confirmed.npy (363691280 bytes) ... 
+
+Progress
+100%
+
+/home/ubuntu/generate.py:73: RuntimeWarning: invalid value encountered in greater
+  selector = numpy.min(X,axis=1) > -5000
+
+Additional data need to be downloaded from:
+http://www.cs.ru.nl/~fgieseke/data/sdss/photometric.npy
+(to the current directory, about 2GB).
+
+Do you wish to continue? [y/n]  y
+
+
+    Funding for the SDSS and SDSS-II has been provided by the Alfred 
+    P. Sloan Foundation, the Participating Institutions, the National 
+    Science Foundation, the U.S. Department of Energy, the National 
+    Aeronautics and Space Administration, the Japanese Monbukagakusho, 
+    the Max Planck Society, and the Higher Education Funding Council 
+    for England. The SDSS Web Site is http://www.sdss.org/.
+    The SDSS is managed by the Astrophysical Research Consortium for the 
+    Participating Institutions. The Participating Institutions are 
+    the American Museum of Natural History, Astrophysical Institute 
+    Potsdam, University of Basel, University of Cambridge, Case 
+    Western Reserve University, University of Chicago, Drexel 
+    University, Fermilab, the Institute for Advanced Study, the Japan 
+    Participation Group, Johns Hopkins University, the Joint Institute 
+    for Nuclear Astrophysics, the Kavli Institute for Particle 
+    Astrophysics and Cosmology, the Korean Scientist Group, the 
+    Chinese Academy of Sciences (LAMOST), Los Alamos National 
+    Laboratory, the Max-Planck-Institute for Astronomy (MPIA), the 
+    Max-Planck-Institute for Astrophysics (MPA), New Mexico State 
+    University, Ohio State University, University of Pittsburgh, 
+    University of Portsmouth, Princeton University, the United States 
+    Naval Observatory, and the University of Washington.
+
+
+    
+Downloading from http://www.cs.ru.nl/~fgieseke/data/sdss/photometric.npy (1790285720 bytes) ... 
+
+Progress
+100%
+
+-------------------------------- DATA --------------------------------
+Number of training patterns:	 2000000
+Number of test patterns:	 10000000
+Dimensionality of patterns:	10
+----------------------------------------------------------------------
+
+
+Running the GPU version ...
+Final tree depth: 9
+Starting all build threads ...
+Memory needed for all training patterns: 0.149017 (GB)
+Number of nodes (internal and leaves) in the top tree: 1023
+Number of buffers attached to the top tree: 512
+Buffer sizes (leaf structure): 32768
+Buffer empty thresholds: 29491
+Indices fetched in each round (to fill buffers): 327680
+-----------------------------------------------------
+Initializing OpenCL (platform_id=0, device_id=0)
+
+Detected 1 platform(s).
+Details for platform 0
+ - Vendor: NVIDIA Corporation
+ - Name: NVIDIA CUDA
+ - Version: OpenCL 1.2 CUDA 10.0.292
+
+Detected 1 devices(s) on platform with id 0.
+Details for device 0
+ - Name: Tesla K80
+ - Version: OpenCL 1.2 CUDA
+ - Driver: 410.104
+ - Number of compute units: 13
+ - Size of memory (GB): 11.173035
+ - Maximum memory allocation (GB): 2.793259
+
+-----------------------------------------------------
+GPU initialized successfully!
+All build threads finished!
+Fitting time: 12.211055
+Initializing device thread for range 0-10000000 ...
+Processing all query thread_list ...
+Memory needed for test patterns: 2.775341 (GB)
+Total memory needed on device: 2.924359 (GB)
+GPU memory allocated successfully!
+Starting Querying process via buffer tree...
+Increasing buffer size ...
+Increasing buffer size ...
+Increasing buffer size ...
+Increasing buffer size ...
+Increasing buffer size ...
+All query indices are in the buffer tree now (buffers or reinsert queue)...
+Starting final brute-force phase ...
+Final brute-force done!
+Buffer full indices (overhead)=0
+
+Number of iterations in while loop: 							561
+Number of empty_all_buffers calls: 							360
+Number of find_leaf_idx_calls: 								561
+
+Elapsed total time for querying: 						43.6567790000
+-----------------------------------------------------------------------------------------------------------------------------
+(Overhead)  Elapsed time for BEFORE WHILE: 					0.1446500000
+(Overhead)  -> ALLOCATE_MEMORY_OPENCL_DEVICES: 					0.1402770000
+-----------------------------------------------------------------------------------------------------------------------------
+Elapsed time in while-loop: 							42.8617110000
+(I)    Elapsed time for PROCESS_ALL_BUFFERS: 					38.2307090000
+(I.A)  Function: retrieve_indices_from_buffers_gpu: 				2.6301370000
+(I.B)  Do brute-force (do_brute.../process_buffers_...chunks_gpu : 		35.5731310000
+(I.B.1) -> Elapsed time for clEnqueueWriteBuffer (INTERLEAVED): 		0.0000360000
+(I.B.1) -> Elapsed time for memcpy (INTERLEAVED): 				0.0097150000
+(I.B.1) -> Elapsed time for waiting for chunk (in seconds): 			0.0010150000
+(I.B.2) -> Number of copy calls: 1
+(I.B.3)   -> Elapsed time for TEST_SUBSET (in seconds): 			0.5623820000
+(I.B.4)   -> Elapsed time for NN Search (in seconds): 				32.7430620000
+(I.B.5)   -> Elapsed time for UPDATE (in seconds): 				2.2369030000
+(I.B.6)   -> Elapsed time for OVERHEAD (in seconds): 				2.6883620000
+(II)   FIND_LEAF_IDX_BATCH : 							1.9075230000
+(III) Elapsed time for final brute-force step : 				2.0826630000
+
+-----------------------------------------------------------------------------------------------------------------------------
+(DIFF) While - PROCESS_ALL_BUFFERS - FIND_LEAF_IDX_BATCH: 			2.7234790000
+(Overhead)  Elapsed time for AFTER WHILE : 					0.6503970000
+-----------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------
+QUERY RUNTIME: 43.6567790000 PROCESS_ALL_BUFFERS: 38.2307090000 FIND_LEAF_IDX_BATCH: 1.9075230000 WHILE_OVERHEAD: 2.7234790000 
+-----------------------------------------------------------------------------------------------------------------------------
+All query thread_list finished!
+Testing time: 44.217127
+Freeing external resources ...
+
+
+Running the CPU version ...
+Final tree depth: 15
+Fitting time: 1.080810
+Testing time: 973.668295
+Freeing external resources ...
