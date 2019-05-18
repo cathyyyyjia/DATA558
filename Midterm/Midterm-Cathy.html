@@ -15088,6 +15088,7 @@ The misclassification error for optimal lambda = 0.3000 is 0.1150000000
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load and standardize test set </span>
 <span class="n">x_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;test_features.npy&#39;</span><span class="p">)</span>
+<span class="n">clfs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;45clfs.npy&#39;</span><span class="p">)</span>
 <span class="n">scaler</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
 <span class="n">scaler</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
 <span class="n">x_test</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
@@ -15152,9 +15153,12 @@ The misclassification error for optimal lambda = 0.3000 is 0.1150000000
 <div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load and standardize validation set </span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span>
+
+<span class="c1"># Load and standardize validation set </span>
 <span class="n">x_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;val_features.npy&#39;</span><span class="p">)</span>
 <span class="n">y_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;val_labels.npy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">clfs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;45clfs.npy&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
     <span class="n">class1</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -15165,12 +15169,10 @@ The misclassification error for optimal lambda = 0.3000 is 0.1150000000
     <span class="n">yval</span><span class="p">[</span><span class="n">yval</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">class2</span>
     <span class="n">pred</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span> <span class="n">clfs</span><span class="p">[</span><span class="n">pairs</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pair</span><span class="p">)],</span> <span class="n">class1</span><span class="p">,</span> <span class="n">class2</span><span class="p">)</span>
     <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">me</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred</span> <span class="o">!=</span> <span class="n">yval</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Precision (Individual classifier): </span><span class="si">%.10f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">me</span><span class="p">))</span>
-    <span class="n">pred</span><span class="p">,</span> <span class="n">preds</span> <span class="o">=</span> <span class="n">prediction</span><span class="p">(</span><span class="n">xval</span><span class="p">,</span> <span class="n">clfs</span><span class="p">)</span>
-    <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">me</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred</span> <span class="o">!=</span> <span class="n">yval</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Precision (All-pair classifiers): </span><span class="si">%.10f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">me</span><span class="p">))</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">yval</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Precision: </span><span class="si">%.10f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">precision</span><span class="p">))</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">yval</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recall: </span><span class="si">%.10f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">recall</span><span class="p">))</span>
 </pre></div>
 
     </div>
@@ -15189,184 +15191,184 @@ The misclassification error for optimal lambda = 0.3000 is 0.1150000000
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Class 1: 0
 Class 2: 1
-Precision (Individual classifier): 0.9600000000
-Precision (All-pair classifiers): 0.5850000000
+Precision: 0.9601840736
+Recall: 0.9600000000
 Class 1: 0
 Class 2: 2
-Precision (Individual classifier): 0.9550000000
-Precision (All-pair classifiers): 0.7850000000
+Precision: 0.9550455046
+Recall: 0.9550000000
 Class 1: 0
 Class 2: 3
-Precision (Individual classifier): 0.9600000000
-Precision (All-pair classifiers): 0.6750000000
+Precision: 0.9607371795
+Recall: 0.9600000000
 Class 1: 0
 Class 2: 4
-Precision (Individual classifier): 0.9500000000
-Precision (All-pair classifiers): 0.6550000000
+Precision: 0.9501800720
+Recall: 0.9500000000
 Class 1: 0
 Class 2: 5
-Precision (Individual classifier): 0.9850000000
-Precision (All-pair classifiers): 0.8550000000
+Precision: 0.9850485049
+Recall: 0.9850000000
 Class 1: 0
 Class 2: 6
-Precision (Individual classifier): 0.9500000000
-Precision (All-pair classifiers): 0.6750000000
+Precision: 0.9501800720
+Recall: 0.9500000000
 Class 1: 0
 Class 2: 7
-Precision (Individual classifier): 0.9900000000
-Precision (All-pair classifiers): 0.7250000000
+Precision: 0.9900000000
+Recall: 0.9900000000
 Class 1: 0
 Class 2: 8
-Precision (Individual classifier): 0.9950000000
-Precision (All-pair classifiers): 0.9050000000
+Precision: 0.9950495050
+Recall: 0.9950000000
 Class 1: 0
 Class 2: 9
-Precision (Individual classifier): 0.9950000000
-Precision (All-pair classifiers): 0.9150000000
+Precision: 0.9950495050
+Recall: 0.9950000000
 Class 1: 1
 Class 2: 2
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.4100000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 3
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.2800000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 4
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.2850000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 5
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.4600000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 6
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.3350000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 7
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.3900000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 8
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.5600000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 1
 Class 2: 9
-Precision (Individual classifier): 1.0000000000
-Precision (All-pair classifiers): 0.4400000000
+Precision: 1.0000000000
+Recall: 1.0000000000
 Class 1: 2
 Class 2: 3
-Precision (Individual classifier): 0.9300000000
-Precision (All-pair classifiers): 0.4850000000
+Precision: 0.9300000000
+Recall: 0.9300000000
 Class 1: 2
 Class 2: 4
-Precision (Individual classifier): 0.8950000000
-Precision (All-pair classifiers): 0.4650000000
+Precision: 0.8959899749
+Recall: 0.8950000000
 Class 1: 2
 Class 2: 5
-Precision (Individual classifier): 0.9150000000
-Precision (All-pair classifiers): 0.5950000000
+Precision: 0.9150415042
+Recall: 0.9150000000
 Class 1: 2
 Class 2: 6
-Precision (Individual classifier): 0.9450000000
-Precision (All-pair classifiers): 0.5200000000
+Precision: 0.9450445045
+Recall: 0.9450000000
 Class 1: 2
 Class 2: 7
-Precision (Individual classifier): 0.9700000000
-Precision (All-pair classifiers): 0.5700000000
+Precision: 0.9700000000
+Recall: 0.9700000000
 Class 1: 2
 Class 2: 8
-Precision (Individual classifier): 0.9850000000
-Precision (All-pair classifiers): 0.6800000000
+Precision: 0.9850485049
+Recall: 0.9850000000
 Class 1: 2
 Class 2: 9
-Precision (Individual classifier): 0.9850000000
-Precision (All-pair classifiers): 0.6400000000
+Precision: 0.9850485049
+Recall: 0.9850000000
 Class 1: 3
 Class 2: 4
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.4150000000
+Precision: 0.9754278851
+Recall: 0.9750000000
 Class 1: 3
 Class 2: 5
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.5500000000
+Precision: 0.9754278851
+Recall: 0.9750000000
 Class 1: 3
 Class 2: 6
-Precision (Individual classifier): 0.8200000000
-Precision (All-pair classifiers): 0.3150000000
+Precision: 0.8211561622
+Recall: 0.8200000000
 Class 1: 3
 Class 2: 7
-Precision (Individual classifier): 0.9300000000
-Precision (All-pair classifiers): 0.4300000000
+Precision: 0.9315535929
+Recall: 0.9300000000
 Class 1: 3
 Class 2: 8
-Precision (Individual classifier): 0.9700000000
-Precision (All-pair classifiers): 0.6750000000
+Precision: 0.9707532051
+Recall: 0.9700000000
 Class 1: 3
 Class 2: 9
-Precision (Individual classifier): 0.9550000000
-Precision (All-pair classifiers): 0.4600000000
+Precision: 0.9554098689
+Recall: 0.9550000000
 Class 1: 4
 Class 2: 5
-Precision (Individual classifier): 0.9200000000
-Precision (All-pair classifiers): 0.4950000000
+Precision: 0.9201680672
+Recall: 0.9200000000
 Class 1: 4
 Class 2: 6
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.4650000000
+Precision: 0.9754278851
+Recall: 0.9750000000
 Class 1: 4
 Class 2: 7
-Precision (Individual classifier): 0.9800000000
-Precision (All-pair classifiers): 0.4950000000
+Precision: 0.9800000000
+Recall: 0.9800000000
 Class 1: 4
 Class 2: 8
-Precision (Individual classifier): 0.9800000000
-Precision (All-pair classifiers): 0.6050000000
+Precision: 0.9807692308
+Recall: 0.9800000000
 Class 1: 4
 Class 2: 9
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.5550000000
+Precision: 0.9754278851
+Recall: 0.9750000000
 Class 1: 5
 Class 2: 6
-Precision (Individual classifier): 0.9600000000
-Precision (All-pair classifiers): 0.6150000000
+Precision: 0.9601840736
+Recall: 0.9600000000
 Class 1: 5
 Class 2: 7
-Precision (Individual classifier): 0.9850000000
-Precision (All-pair classifiers): 0.6800000000
+Precision: 0.9850485049
+Recall: 0.9850000000
 Class 1: 5
 Class 2: 8
-Precision (Individual classifier): 0.9900000000
-Precision (All-pair classifiers): 0.7700000000
+Precision: 0.9901960784
+Recall: 0.9900000000
 Class 1: 5
 Class 2: 9
-Precision (Individual classifier): 0.9950000000
-Precision (All-pair classifiers): 0.7900000000
+Precision: 0.9950495050
+Recall: 0.9950000000
 Class 1: 6
 Class 2: 7
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.4550000000
+Precision: 0.9750475048
+Recall: 0.9750000000
 Class 1: 6
 Class 2: 8
-Precision (Individual classifier): 0.9900000000
-Precision (All-pair classifiers): 0.7250000000
+Precision: 0.9900000000
+Recall: 0.9900000000
 Class 1: 6
 Class 2: 9
-Precision (Individual classifier): 0.9750000000
-Precision (All-pair classifiers): 0.5300000000
+Precision: 0.9750475048
+Recall: 0.9750000000
 Class 1: 7
 Class 2: 8
-Precision (Individual classifier): 0.9000000000
-Precision (All-pair classifiers): 0.5850000000
+Precision: 0.9014452027
+Recall: 0.9000000000
 Class 1: 7
 Class 2: 9
-Precision (Individual classifier): 0.8600000000
-Precision (All-pair classifiers): 0.4550000000
+Precision: 0.8601440576
+Recall: 0.8600000000
 Class 1: 8
 Class 2: 9
-Precision (Individual classifier): 0.9000000000
-Precision (All-pair classifiers): 0.6750000000
+Precision: 0.9040404040
+Recall: 0.9000000000
 </pre>
 </div>
 </div>
