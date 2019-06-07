@@ -114,5 +114,5 @@ iris = datasets.load_iris()
 To start the experimental comparison, run the following code in command line. You will see a report with clustering plots.
 
 ```
-python demo_real_world_data.py
+python experimental_comparison.py
 ```
