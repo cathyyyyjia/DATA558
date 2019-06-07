@@ -1,7 +1,5 @@
-import math
 import numpy as np
 from copy import deepcopy
-from sklearn.preprocessing import StandardScaler
 
 class mykmeans(object):
 
