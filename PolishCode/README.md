@@ -1,14 +1,14 @@
 # DATA 558 Polished Code
 
-In this assignment, I implemented k-means clustering algorithm. I have tested my code on both simulated dataset and real-world dataset and compared with sklearn built-in KMeans function.
+In this assignment, I implemented k-means clustering algorithm. I have tested my code on both simulated dataset and real-world dataset and compared with scikit-learn built-in KMeans function.
 
-## K-Means Clustering Implemention: mykmeans
+## K-Means Clustering Implementation: mykmeans
 
 ```python
 class mykmeans(k=3, max_iter=200, eps=0.01)
 ```
 
-A class implements k-means clustering algorithm using Eucliean distance for distance computing.
+A class implements k-means clustering algorithm using Euclidean distance for distance computing.
 
 ### Parameters
 
@@ -74,7 +74,7 @@ A (n, d) array need to be clustered
 ### Attributes
 
 - `clusters`: A dictionary {label: [data points]}
-- `centers`: A (k, ) array of centroids
+- `centers`: A (k, d) array of centroids
 - `num_iter`: Number of iterations
 
 ## Simulated Dataset Demo
@@ -89,7 +89,7 @@ python demo_simulated_data.py
 
 ## Real-World Dataset Demo
 
-This is a demo using iris dataset which is an example datasets used by scikit-learn. The dataset can be loaded using the following code:
+This is a demo using iris dataset which is an example dataset used by scikit-learn. The dataset can be loaded using the following code:
 
 ```python
 from sklearn import datasets
@@ -104,7 +104,7 @@ python demo_real_world_data.py
 
 ## Experimental Comparison
 
-This file is designed for comparing my implemented k-means clustering with sklearn's k-means clustering. The simulated dataset with size of 300 and dimension of 20, assigned with 3 classes (0, 1 and 2). The real-world dataset is the iris dataset which is an example datasets used by scikit-learn. The dataset can be loaded using the following code:
+This file is designed for comparing my implemented k-means clustering with sklearn's k-means clustering. The simulated dataset with size of 300 and dimension of 20, assigned with 3 classes (0, 1 and 2). The real-world dataset is the iris dataset which is an example dataset used by scikit-learn. The dataset can be loaded using the following code:
 
 ```python
 from sklearn import datasets
