@@ -44,6 +44,7 @@ class mykmeans(object):
         Input:
             - X: (n,d) array
         """
+
         k = self.get_k()
         max_iter = self.get_max_iter()
         eps = self.get_eps()
@@ -62,18 +63,22 @@ class mykmeans(object):
         # Clustering
         t = 0
         while t < max_iter:
+            # Initiate clusters
             self.clusters = {}
             for i in range(k):
                 self.clusters[i] = []
-
+        
+            # Associate each data point with the nearest centroid
             for i in range(len(X)):
                 point = X[i]
                 dists = []
                 
-                # Associate each data point with the nearest centroid
+                # Compute distance between each point and centroids
                 for center in self.centers:
                     dist = compdist(point, center)
                     dists.append(dist)
+
+                # Assign the nearest centroid
                 label = np.argmin(dists)
                 self.clusters[label].append(point)
                 
