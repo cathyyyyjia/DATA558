@@ -1,6 +1,6 @@
 # DATA 558 Polished Code
 
-In this assignment, I implemented k-means clustering algorithm. I have tested my code on both simulated dataset and real-world dataset and compared with scikit-learn built-in KMeans function.
+In this assignment, I implemented the k-means clustering algorithm. I have tested my code on both simulated dataset and real-world dataset and compared with scikit-learn built-in KMeans function.
 
 ## K-Means Clustering Implementation: mykmeans
 
